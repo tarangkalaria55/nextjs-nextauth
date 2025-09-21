@@ -33,7 +33,7 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     // "source.fixAll.biome": "never",
-    "source.fixAll.eslint": "always"
+    "source.fixAll.eslint": "explicit"
   },
 
   // Recommended editor behaviors
