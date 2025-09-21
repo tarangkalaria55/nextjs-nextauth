@@ -3,7 +3,18 @@ import { z } from 'zod';
 
 export const env = createEnv({
   server: {
+    AUTH_SECRET: z.string().min(1),
+
     DATABASE_URL: z.string().min(1),
+
+    GITHUB_ID: z.string().min(1),
+    GITHUB_SECRET: z.string().min(1),
+
+    EMAIL_SERVER_USER: z.string().min(1),
+    EMAIL_SERVER_PASSWORD: z.string().min(1),
+    EMAIL_SERVER_HOST: z.string().min(1),
+    EMAIL_SERVER_PORT: z.number().min(1),
+    EMAIL_FROM: z.email().min(1),
   },
   client: {
     NEXT_PUBLIC_PUBLISHABLE_KEY: z.string().min(1),
