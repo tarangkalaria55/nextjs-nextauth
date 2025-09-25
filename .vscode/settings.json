@@ -31,9 +31,9 @@
   // Use Biome as default formatter
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.formatOnSave": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
-  },
+  // "editor.codeActionsOnSave": {
+  //   "source.fixAll.eslint": "explicit"
+  // },
 
   // Recommended editor behaviors
   "files.eol": "\n", // Always LF
@@ -41,7 +41,7 @@
   "files.trimTrailingWhitespace": true,
 
   // Let Biome handle linting instead of ESLint
-  "eslint.enable": true,
+  // "eslint.enable": true,
   "biome.enabled": false,
 
   "prettier.configPath": ".prettierrc",
