@@ -12,6 +12,7 @@
     "dotenv-vault:pull": "npx dotenv-vault@latest pull"
   },
   "dependencies": {
+    "@auth/prisma-adapter": "^2.10.0",
     "@radix-ui/react-slot": "^1.2.3",
     "@t3-oss/env-nextjs": "^0.13.8",
     "class-variance-authority": "^0.7.1",
