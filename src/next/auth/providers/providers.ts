@@ -1,6 +1,7 @@
 import type { Provider as NextAuthProvider } from 'next-auth/providers';
 import CredentialsProvider from './credentials-provider';
 import NodemailerProvider from './nodemailer-provider';
+import { ProviderType } from './types';
 
 export const providers: NextAuthProvider[] = [
 	CredentialsProvider,
@@ -16,6 +17,8 @@ export const providerMap = providers
 			return { id: provider.id, name: provider.name };
 		}
 	})
-	.filter((provider) => provider.id !== 'credentials');
+	.filter(
+		(provider) => provider.id !== ProviderType.Credentials.toLocaleLowerCase()
+	);
 
 export const isProviderHasCredential = providerMap.length != providers.length;

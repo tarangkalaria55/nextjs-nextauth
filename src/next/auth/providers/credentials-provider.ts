@@ -1,21 +1,12 @@
 import Credentials from 'next-auth/providers/credentials';
-import { signInSchema } from '@/schemas/signInSchema';
-import { getUserByEmail } from '@/db/getUserFromDb';
-import { ZodError } from 'zod';
-import { CredentialsSignin } from 'next-auth';
+import { signInSchema } from '@/schema/signInSchema';
 import type { Provider } from 'next-auth/providers';
 import { ProviderType } from './types';
-
-class InvalidCredentialsError extends CredentialsSignin {
-	code = 'Invalid username or password.'; // Optional: custom message
-}
-
-class ValidationError extends CredentialsSignin {
-	code = 'Input validation failed.'; // General message for Zod errors
-}
+import { getUserByEmail } from '@/db/getUserByEmail';
 
 const CredentialsProvider: Provider = Credentials({
 	name: ProviderType.Credentials,
+	id: ProviderType.Credentials.toLocaleLowerCase(),
 	credentials: {
 		email: {
 			type: 'email',
@@ -32,30 +23,25 @@ const CredentialsProvider: Provider = Credentials({
 		try {
 			const { email, password } = await signInSchema.parseAsync(credentials);
 
-			// logic to salt and hash password
-			const pwHash = password;
+			const user = await getUserByEmail(email);
 
-			// logic to verify if the user exists
-			const user = await getUserByEmail(email, pwHash);
-
-			if (!user) {
-				// No user found, so this is their first attempt to login
-				// Optionally, this is also the place you could do a user registration
-				throw new InvalidCredentialsError();
+			if (!user || !user.password) {
+				return null;
 			}
 
-			// return user object with their profile data
-			return user;
+			const isPasswordValid = password == user.password;
+
+			if (!isPasswordValid) {
+				return null;
+			}
+
+			return {
+				id: user.id,
+				email: user.email,
+				name: user.name,
+			};
 		} catch (error) {
-			if (error instanceof ZodError) {
-				throw new ValidationError();
-			} else if (error instanceof CredentialsSignin) {
-				throw error;
-			} else if (error instanceof Error) {
-				const err = new CredentialsSignin(error.message, error);
-				err.code = 'Something went wrong';
-				throw err;
-			}
+			console.error('Error during authentication:', error);
 			return null;
 		}
 	},
