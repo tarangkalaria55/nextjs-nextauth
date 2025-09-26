@@ -1,14 +1,15 @@
 'use client';
 
 import { signIn } from '@/auth';
+import { ProviderType } from '@/auth.types';
 
 export function SignIn() {
 	const credentialsAction = (formData: FormData) => {
-		signIn('credentials', formData);
+		signIn(ProviderType.Credentials, formData);
 	};
 
 	const nodemailAction = (formData: FormData) => {
-		signIn('credentials', formData);
+		signIn(ProviderType.Email, formData);
 	};
 
 	return (
@@ -22,10 +23,14 @@ export function SignIn() {
 					Password
 					<input type="password" id="credentials-password" name="password" />
 				</label>
-				<input type="submit" value="Sign In" />
+				<input type="submit" value="Sign In with Credentials" />
 			</form>
 			<form action={nodemailAction}>
-				<button type="submit">Sign In using Magic link</button>
+				<label htmlFor="email-email">
+					Email
+					<input type="email" id="email-email" name="email" />
+				</label>
+				<button type="submit">Sign In with Email</button>
 			</form>
 		</div>
 	);

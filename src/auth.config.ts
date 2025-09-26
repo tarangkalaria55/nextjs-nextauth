@@ -1,4 +1,4 @@
-import type { NextAuthConfig } from 'next-auth';
+import { CredentialsSignin, type NextAuthConfig, AuthError } from 'next-auth';
 
 import Nodemailer from 'next-auth/providers/nodemailer';
 import { env } from './lib/env';
@@ -8,11 +8,21 @@ import { ZodError } from 'zod';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import prisma from '@/prisma';
 import { getUserByEmail } from '@/db/getUserFromDb';
+import { ProviderType } from '@/auth.types';
+
+export class InvalidCredentialsError extends CredentialsSignin {
+	code = 'Invalid username or password.'; // Optional: custom message
+}
+
+export class ValidationError extends CredentialsSignin {
+	code = 'Input validation failed.'; // General message for Zod errors
+}
 
 export default {
 	adapter: PrismaAdapter(prisma),
 	providers: [
 		Credentials({
+			name: ProviderType.Credentials,
 			credentials: {
 				email: {
 					type: 'email',
@@ -39,21 +49,27 @@ export default {
 					if (!user) {
 						// No user found, so this is their first attempt to login
 						// Optionally, this is also the place you could do a user registration
-						throw new Error('Invalid credentials.');
+						throw new InvalidCredentialsError();
 					}
 
 					// return user object with their profile data
 					return user;
 				} catch (error) {
 					if (error instanceof ZodError) {
-						// Return `null` to indicate that the credentials are invalid
-						return null;
+						throw new ValidationError();
+					} else if (error instanceof CredentialsSignin) {
+						throw error;
+					} else if (error instanceof Error) {
+						const err = new CredentialsSignin(error.message, error);
+						err.code = 'Something went wrong';
+						throw err;
 					}
 					return null;
 				}
 			},
 		}),
 		Nodemailer({
+			name: ProviderType.Email,
 			server: {
 				host: env.EMAIL_SERVER_HOST,
 				port: env.EMAIL_SERVER_PORT,

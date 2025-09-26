@@ -7,17 +7,17 @@ export const env = createEnv({
 
 		DATABASE_URL: z.string().min(1),
 
-		GITHUB_ID: z.string().min(1),
-		GITHUB_SECRET: z.string().min(1),
+		GITHUB_ID: z.string().min(1).optional().or(z.literal('')),
+		GITHUB_SECRET: z.string().min(1).optional().or(z.literal('')),
 
 		EMAIL_SERVER_USER: z.string().min(1),
 		EMAIL_SERVER_PASSWORD: z.string().min(1),
 		EMAIL_SERVER_HOST: z.string().min(1),
-		EMAIL_SERVER_PORT: z.number().min(1),
+		EMAIL_SERVER_PORT: z.coerce.number().min(1),
 		EMAIL_FROM: z.email().min(1),
 	},
 	client: {
-		NEXT_PUBLIC_PUBLISHABLE_KEY: z.string().min(1),
+		NEXT_PUBLIC_PUBLISHABLE_KEY: z.string().min(1).optional().or(z.literal('')),
 	},
 	experimental__runtimeEnv: {
 		NEXT_PUBLIC_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_PUBLISHABLE_KEY,
@@ -26,12 +26,19 @@ export const env = createEnv({
 	// Called when the schema validation fails.
 	onValidationError: (issues) => {
 		console.error('❌ Invalid environment variables:', issues);
-		throw new Error('Invalid environment variables');
+
+		const msg = issues
+			.map(
+				(issue, idx) =>
+					`MESSAGE_${idx + 1}: ${issue.message}; PATH_${idx + 1}: ${JSON.stringify(issue.path ?? '')};`
+			)
+			.join();
+		throw new Error('Invalid environment variables: ' + msg);
 	},
 	// Called when server variables are accessed on the client.
-	onInvalidAccess: () => {
+	onInvalidAccess: (variable) => {
 		throw new Error(
-			'❌ Attempted to access a server-side environment variable on the client'
+			`❌ Attempted to access a server-side environment variable: ${variable} on the client`
 		);
 	},
 });
