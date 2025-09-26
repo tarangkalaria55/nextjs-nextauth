@@ -43,6 +43,5 @@ next-env.d.ts
 .flaskenv*
 !.env.project
 !.env.vault
-/src/generated/prisma
 
 /src/generated/prisma

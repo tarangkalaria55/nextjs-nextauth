@@ -1,9 +1,9 @@
 {
-  "recommendations": [
-    "biomejs.biome",
-    "dbaeumer.vscode-eslint",
-    "esbenp.prettier-vscode",
-    "dotenv.dotenv-vscode"
-  ],
-  "unwantedRecommendations": ["dotenv.dotenv-vscode"]
+	"recommendations": [
+		"biomejs.biome",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"dotenv.dotenv-vscode"
+	],
+	"unwantedRecommendations": ["dotenv.dotenv-vscode"]
 }
