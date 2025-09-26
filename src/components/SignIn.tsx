@@ -1,7 +1,7 @@
 'use client';
 
-import { signIn } from '@/auth';
-import { ProviderType } from '@/auth.types';
+import { signIn } from '@/next-auth/auth';
+import { ProviderType } from '@/next-auth/auth.types';
 
 export function SignIn() {
 	const credentialsAction = (formData: FormData) => {
