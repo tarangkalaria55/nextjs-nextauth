@@ -1,10 +1,22 @@
 import Credentials from 'next-auth/providers/credentials';
-import { signInSchema } from '@/schema/signInSchema';
+
 import type { Provider } from 'next-auth/providers';
 import { ProviderType } from './types';
 import { getUserByEmail } from '@/db/getUserByEmail';
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-const CredentialsProvider: Provider = Credentials({
+export const credentialSchema = z.object({
+	email: z.email({ error: 'Invalid email' }),
+	password: z
+		.string({ error: 'Password is required' })
+		.min(1, 'Password is required'),
+});
+
+export type CredentialSchema = z.infer<typeof credentialSchema>;
+export const CredentialResolver = zodResolver(credentialSchema);
+
+export const CredentialsProvider: Provider = Credentials({
 	name: ProviderType.Credentials,
 	credentials: {
 		email: {
@@ -20,7 +32,8 @@ const CredentialsProvider: Provider = Credentials({
 	},
 	authorize: async (credentials) => {
 		try {
-			const { email, password } = await signInSchema.parseAsync(credentials);
+			const { email, password } =
+				await credentialSchema.parseAsync(credentials);
 
 			const user = await getUserByEmail(email);
 
@@ -45,5 +58,3 @@ const CredentialsProvider: Provider = Credentials({
 		}
 	},
 });
-
-export default CredentialsProvider;

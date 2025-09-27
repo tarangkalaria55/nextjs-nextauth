@@ -9,9 +9,9 @@ export const config = {
 	adapter: PrismaAdapter(prisma),
 	providers: providers,
 	secret: env.AUTH_SECRET,
-	// pages: {
-	// 	signIn: '/login',
-	// },
+	pages: {
+		signIn: '/signin',
+	},
 	session: {
 		strategy: 'jwt',
 	},

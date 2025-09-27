@@ -3,7 +3,17 @@ import { env } from '@/lib/env';
 import type { Provider } from 'next-auth/providers';
 import { ProviderType } from './types';
 
-const NodemailerProvider: Provider = Nodemailer({
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+export const magicLinkSchema = z.object({
+	email: z.email('This is not valid email address'),
+});
+
+export type MagicLinkSchema = z.infer<typeof magicLinkSchema>;
+export const MagicLinkResolver = zodResolver(magicLinkSchema);
+
+export const MagiclinkProvider: Provider = Nodemailer({
 	name: ProviderType.Email,
 	server: {
 		host: env.EMAIL_SERVER_HOST,
@@ -15,5 +25,3 @@ const NodemailerProvider: Provider = Nodemailer({
 	},
 	from: env.EMAIL_FROM,
 });
-
-export default NodemailerProvider;
