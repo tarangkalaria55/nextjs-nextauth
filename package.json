@@ -10,10 +10,10 @@
 		"format": "prettier --write .",
 		"dotenv-vault:push": "npx dotenv-vault@latest push",
 		"dotenv-vault:pull": "npx dotenv-vault@latest pull",
-		"db:generate": "prisma generate --schema=./prisma/schema/",
-		"db:push": "prisma db push --schema=./prisma/schema/",
-		"db:pull": "prisma db pull --schema=./prisma/schema/",
-		"db:studio": "prisma studio --schema=./prisma/schema/"
+		"db:generate": "npx prisma generate --schema=./prisma/schema/",
+		"db:push": "npx prisma db push --schema=./prisma/schema/",
+		"db:pull": "npx prisma db pull --schema=./prisma/schema/",
+		"db:studio": "npx prisma studio --schema=./prisma/schema/"
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.10.0",
