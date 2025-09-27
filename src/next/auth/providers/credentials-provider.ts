@@ -6,7 +6,6 @@ import { getUserByEmail } from '@/db/getUserByEmail';
 
 const CredentialsProvider: Provider = Credentials({
 	name: ProviderType.Credentials,
-	id: ProviderType.Credentials.toLocaleLowerCase(),
 	credentials: {
 		email: {
 			type: 'email',

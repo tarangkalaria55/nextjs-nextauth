@@ -4,8 +4,9 @@ import { config } from './config';
 
 export {
 	providers,
-	isProviderHasCredential,
-	providerMap,
+	credentialProvider,
+	emailProvider,
+	oAuthProviderMap,
 } from './providers/providers';
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

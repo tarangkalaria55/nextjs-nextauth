@@ -5,7 +5,6 @@ import { ProviderType } from './types';
 
 const NodemailerProvider: Provider = Nodemailer({
 	name: ProviderType.Email,
-	id: ProviderType.Email.toLocaleLowerCase(),
 	server: {
 		host: env.EMAIL_SERVER_HOST,
 		port: env.EMAIL_SERVER_PORT,

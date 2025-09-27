@@ -5,7 +5,6 @@ import { ProviderType } from './types';
 
 const GoogleProvider: Provider = Google({
 	name: ProviderType.Google,
-	id: ProviderType.Google.toLocaleLowerCase(),
 	clientId: env.GOOGLE_ID,
 	clientSecret: env.GOOGLE_SECRET,
 });
