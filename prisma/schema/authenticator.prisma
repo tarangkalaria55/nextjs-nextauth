@@ -1,7 +1,7 @@
 // Optional for WebAuthn support
 model Authenticator {
-  credentialID         String  @id @map("_id")
-  userId               String  @db.ObjectId
+  credentialID         String  @unique
+  userId               String
   providerAccountId    String
   credentialPublicKey  String
   counter              Int
@@ -11,5 +11,5 @@ model Authenticator {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, credentialID])
+  @@id([userId, credentialID])
 }

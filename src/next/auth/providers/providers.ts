@@ -2,10 +2,12 @@ import type { Provider as NextAuthProvider } from 'next-auth/providers';
 import CredentialsProvider from './credentials-provider';
 import NodemailerProvider from './nodemailer-provider';
 import { ProviderType } from './types';
+import GoogleProvider from './google-provider';
 
 export const providers: NextAuthProvider[] = [
 	CredentialsProvider,
 	NodemailerProvider,
+	GoogleProvider,
 ];
 
 export const providerMap = providers

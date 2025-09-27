@@ -1,15 +1,17 @@
 'use client';
 
-import { customLogin } from '@/actions/auth/login';
 import { logout } from '@/actions/auth/logout';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
+	const router = useRouter();
 	const handleSignin = async () => {
-		await customLogin();
+		router.push('/login');
 	};
 	const handleSignout = async () => {
+		// router.push('/login');
 		await logout();
 	};
 	return (

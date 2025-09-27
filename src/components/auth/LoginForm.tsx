@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useTransition } from 'react';
@@ -37,7 +36,7 @@ export const LoginForm = () => {
 			setError('');
 			setSuccess('');
 			login(formData)
-				.then((data: any) => {
+				.then((data) => {
 					if (data.success) {
 						setSuccess(data.success);
 						router.push('/setup');
@@ -45,7 +44,7 @@ export const LoginForm = () => {
 						setError(data.error);
 					}
 				})
-				.catch((data: any) => {
+				.catch((data) => {
 					setError(data.error);
 				});
 		});

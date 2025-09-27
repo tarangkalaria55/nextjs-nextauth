@@ -1,17 +1,54 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
-import { customLogin } from '@/actions/auth/login';
+import { useRouter } from 'next/navigation';
+import { useState, useTransition } from 'react';
+import { Loader2 } from 'lucide-react';
+import { FormError } from './FormError';
+import { FormSuccess } from './FormSuccess';
+import { signIn } from 'next-auth/react';
 
 interface GoogleAuthButtonProps {
 	text: string;
 }
 
 export const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ text }) => {
+	const [error, setError] = useState<string | undefined>('');
+	const [success, setSuccess] = useState<string | undefined>('');
+	const [isPending, startTransition] = useTransition();
+	const router = useRouter();
+
 	const submitHandler = async () => {
-		await customLogin('google', { redirectTo: '/' });
+		startTransition(() => {
+			signIn('google')
+				.then(() => {
+					console.error('google login success');
+				})
+				.catch((err) => {
+					console.error('google error', err);
+				});
+			// setError('');
+			// setSuccess('');
+			// customLogin('google', { redirectTo: '/' })
+			// 	.then((data) => {
+			// 		if (data.success) {
+			// 			setSuccess(data.success);
+			// 			router.push('/');
+			// 		} else if (data.error) {
+			// 			setError(data.error);
+			// 		}
+			// 	})
+			// 	.catch((data) => {
+			// 		setError(data.error);
+			// 	});
+		});
 	};
 	return (
 		<form action={submitHandler}>
-			<Button className="my-1 w-full bg-white text-gray-700 hover:bg-slate-100">
+			<Button
+				disabled={isPending}
+				className="my-1 w-full bg-white text-gray-700 hover:bg-slate-100"
+			>
 				<svg
 					className="h-5 w-5 mr-2"
 					viewBox="0 0 24 24"
@@ -35,8 +72,17 @@ export const GoogleAuthButton: React.FC<GoogleAuthButtonProps> = ({ text }) => {
 					/>
 					<path d="M1 1h22v22H1z" fill="none" />
 				</svg>
-				{text}
+				{isPending ? (
+					<>
+						<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+						Loading...
+					</>
+				) : (
+					text
+				)}
 			</Button>
+			<FormError message={error} />
+			<FormSuccess message={success} />
 		</form>
 	);
 };

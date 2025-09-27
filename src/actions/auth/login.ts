@@ -36,7 +36,3 @@ export const login = async (formData: LoginSchema) => {
 		return { error: 'Login failed' };
 	}
 };
-
-export const customLogin: typeof signIn = async (provider, option) => {
-	return await signIn(provider, option);
-};

@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 import { LoginForm } from '@/components/auth/LoginForm';
 import { Separator } from '@/components/auth/Separator';
@@ -12,7 +14,7 @@ export default function LoginPage() {
 			<GoogleAuthButton text="Sign In with Google" />
 			<div className="mt-6 text-center">
 				<p className="text-sm text-gray-400">
-					Do not have an account?{' '}
+					Do not have an account?
 					<Link
 						href="/signup"
 						className="pl-1.5 font-medium text-[#3ba55c] hover:text-[#2d7d46]"
