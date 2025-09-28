@@ -18,7 +18,6 @@ import { FormError } from '@/components/auth/FormError';
 import { FormSuccess } from '@/components/auth/FormSuccess';
 import { Loader2 } from 'lucide-react';
 import { signIn } from 'next-auth/react';
-import { AuthError } from 'next-auth';
 import { toast } from 'sonner';
 
 import z from 'zod';
@@ -70,9 +69,7 @@ export const CredentialForm = () => {
 
 				router.push('/setup');
 			} catch (error) {
-				if (error instanceof AuthError) {
-					setError(error.message);
-				} else if (error instanceof Error) {
+				if (error instanceof Error) {
 					setError(error.message);
 				} else {
 					setError('Opps! something went wrong');

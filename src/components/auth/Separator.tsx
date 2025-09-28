@@ -1,3 +1,5 @@
+'use client';
+
 export const Separator = () => {
 	return (
 		<div className="my-4 relative">

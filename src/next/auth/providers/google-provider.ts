@@ -5,8 +5,8 @@ import { ProviderType } from './types';
 
 const GoogleProvider: Provider = Google({
 	name: ProviderType.Google,
-	clientId: env.GOOGLE_ID,
-	clientSecret: env.GOOGLE_SECRET,
+	clientId: env.AUTH_GOOGLE_ID,
+	clientSecret: env.AUTH_GOOGLE_SECRET,
 });
 
 export default GoogleProvider;

@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@/next/auth';
+import { edgeCaseAuthConfig } from './next/auth/config/edgeCaseAuthConfig';
+import NextAuth from 'next-auth';
+
+const { auth } = NextAuth(edgeCaseAuthConfig);
 
 export default auth((req) => {
 	const { nextUrl, auth: session } = req;

@@ -30,7 +30,11 @@ export const MagicLinkForm = () => {
 	});
 
 	const onSubmit = async (formData: MagicLinkSchema) => {
-		await signIn('credentials', formData);
+		console.log(formData);
+		await signIn('resend', {
+			email: formData.email,
+			redirectTo: '/',
+		});
 	};
 
 	return (

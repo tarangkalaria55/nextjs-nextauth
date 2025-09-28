@@ -6,7 +6,7 @@ import {
 	SignInAuthorizationParams,
 	SignInOptions,
 } from 'next-auth/react';
-import { ProviderId } from 'next-auth/providers';
+import type { ProviderId } from 'next-auth/providers';
 
 interface OAuthFormProps {
 	text: string;

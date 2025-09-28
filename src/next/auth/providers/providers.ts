@@ -23,7 +23,7 @@ export const providers: NextAuthProvider[] = [
 	GithubProvider,
 ];
 
-const providerMap = providers.map((provider) => {
+export const providerMap = providers.map((provider) => {
 	if (typeof provider === 'function') {
 		const providerData = provider();
 		return { id: providerData.id, name: providerData.name };
@@ -31,17 +31,3 @@ const providerMap = providers.map((provider) => {
 		return { id: provider.id, name: provider.name };
 	}
 });
-
-export const credentialProvider = providerMap.find(
-	(provider) => provider.name === ProviderType.Credentials
-);
-
-export const emailProvider = providerMap.find(
-	(provider) => provider.name === ProviderType.Email
-);
-
-export const oAuthProviderMap = providerMap.filter(
-	(provider) =>
-		provider.name !== ProviderType.Credentials &&
-		provider.name !== ProviderType.Email
-);

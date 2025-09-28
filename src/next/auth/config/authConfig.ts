@@ -1,17 +1,13 @@
 import { NextAuthConfig } from 'next-auth';
-import { providers } from './providers/providers';
+import { env } from '@/lib/env';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
-import { env } from '@/lib/env';
+import { edgeCaseAuthConfig } from './edgeCaseAuthConfig';
 
-export const config = {
-	debug: process.env.NODE_ENV !== 'production',
+export const authConfig = {
+	...edgeCaseAuthConfig,
 	adapter: PrismaAdapter(prisma),
-	providers: providers,
 	secret: env.AUTH_SECRET,
-	pages: {
-		signIn: '/signin',
-	},
 	session: {
 		strategy: 'jwt',
 	},

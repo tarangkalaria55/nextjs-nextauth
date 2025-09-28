@@ -1,14 +1,14 @@
 'use client';
 
+import React, { useEffect } from 'react';
+import { signOut, useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { CredentialForm } from '@/components/auth/CredentialForm';
 import { Separator } from '@/components/auth/Separator';
 import { MagicLinkForm } from '@/components/auth/MagicLinkForm';
 import { OAuthForm } from '@/components/auth/OAuthForm';
-import Link from 'next/link';
 import GoogleIcon from '@/components/icons/GoogleIcon';
-import { signOut, useSession } from 'next-auth/react';
-import { useEffect } from 'react';
 
 const SigninPage = () => {
 	const { data: session } = useSession();
@@ -27,10 +27,17 @@ const SigninPage = () => {
 			<Separator />
 			<OAuthForm
 				text="Google"
-				icon={<GoogleIcon />}
 				provider="google"
+				icon={<GoogleIcon />}
 				options={{ redirectTo: '/' }}
 			/>
+			<Separator />
+			<OAuthForm
+				text="Github"
+				provider="github"
+				options={{ redirectTo: '/' }}
+			/>
+
 			<div className="mt-6 text-center">
 				<p className="text-sm text-gray-400">
 					Do not have an account?{' '}
