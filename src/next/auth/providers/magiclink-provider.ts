@@ -17,4 +17,5 @@ export const MagiclinkProvider: Provider = Resend({
 	name: ProviderType.Email,
 	apiKey: env.AUTH_RESEND_KEY,
 	from: env.AUTH_RESEND_EMAIL_FROM,
+	secret: env.AUTH_SECRET,
 });

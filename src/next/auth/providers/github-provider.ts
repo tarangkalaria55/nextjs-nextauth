@@ -7,6 +7,7 @@ const GithubProvider: Provider = Github({
 	name: ProviderType.Github,
 	clientId: env.AUTH_GITHUB_ID,
 	clientSecret: env.AUTH_GITHUB_SECRET,
+	allowDangerousEmailAccountLinking: true,
 });
 
 export default GithubProvider;

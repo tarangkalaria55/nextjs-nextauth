@@ -1,24 +1,29 @@
 import { NextResponse } from 'next/server';
-import { edgeCaseAuthConfig } from './next/auth/config/edgeCaseAuthConfig';
 import NextAuth from 'next-auth';
+import { createRouteMatcher } from './lib/routeMatcher';
+import { authConfig } from './next/auth/config/authConfig';
 
-const { auth } = NextAuth(edgeCaseAuthConfig);
+const { auth } = NextAuth(authConfig);
+
+const isUnprotectedRoute = createRouteMatcher(['/signin', '/signup']);
 
 export default auth((req) => {
+	console.log('ass');
 	const { nextUrl, auth: session } = req;
 	const isLoggedIn = !!session;
-	const isLoginPage = nextUrl.pathname === '/signin';
-	const isSignUpPage = nextUrl.pathname === '/signup';
-	const isSetupPage = nextUrl.pathname === '/setup';
+
+	const isProtectedRoute = !isUnprotectedRoute(req);
+
+	console.log(isProtectedRoute);
 
 	// If trying to access /setup while not logged in
-	if (!isLoggedIn && isSetupPage) {
+	if (!isLoggedIn && isProtectedRoute) {
 		const loginUrl = new URL('/signin', nextUrl.origin);
 		return NextResponse.redirect(loginUrl);
 	}
 
 	// If trying to access /login or /signup while already logged in
-	if (isLoggedIn && (isLoginPage || isSignUpPage)) {
+	if (isLoggedIn && !isProtectedRoute) {
 		const dashboardUrl = new URL('/', nextUrl.origin);
 		return NextResponse.redirect(dashboardUrl);
 	}
@@ -28,5 +33,14 @@ export default auth((req) => {
 });
 
 export const config = {
-	matcher: ['/login', '/signup', '/setup', '/'],
+	matcher: [
+		/*
+		 * Match all request paths except for the ones starting with:
+		 * - api (API routes)
+		 * - _next/static (static files)
+		 * - _next/image (image optimization files)
+		 * - favicon.ico (favicon file)
+		 */
+		'/((?!api|_next/static|_next/image|favicon.ico).*)',
+	],
 };

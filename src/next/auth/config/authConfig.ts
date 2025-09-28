@@ -2,10 +2,15 @@ import { NextAuthConfig } from 'next-auth';
 import { env } from '@/lib/env';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
-import { edgeCaseAuthConfig } from './edgeCaseAuthConfig';
+import { providers } from '../providers/providers';
 
 export const authConfig = {
-	...edgeCaseAuthConfig,
+	debug: process.env.NODE_ENV !== 'production',
+	providers: providers,
+	pages: {
+		signIn: '/signin',
+		newUser: '/profile',
+	},
 	adapter: PrismaAdapter(prisma),
 	secret: env.AUTH_SECRET,
 	session: {
