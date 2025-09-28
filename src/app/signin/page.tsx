@@ -1,7 +1,5 @@
 'use client';
 
-import React, { useEffect } from 'react';
-import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { AuthLayout } from '@/components/auth/AuthLayout';
 import { CredentialForm } from '@/components/auth/CredentialForm';
@@ -11,14 +9,6 @@ import { OAuthForm } from '@/components/auth/OAuthForm';
 import GoogleIcon from '@/components/icons/GoogleIcon';
 
 const SigninPage = () => {
-	const { data: session } = useSession();
-
-	useEffect(() => {
-		if (session) {
-			signOut({ redirect: false });
-		}
-	}, [session]);
-
 	return (
 		<AuthLayout title="Welcome Back!">
 			<CredentialForm />

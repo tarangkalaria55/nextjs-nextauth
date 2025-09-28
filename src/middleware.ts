@@ -7,13 +7,13 @@ const { auth } = NextAuth(edgeCaseAuthConfig);
 export default auth((req) => {
 	const { nextUrl, auth: session } = req;
 	const isLoggedIn = !!session;
-	const isLoginPage = nextUrl.pathname === '/login';
+	const isLoginPage = nextUrl.pathname === '/signin';
 	const isSignUpPage = nextUrl.pathname === '/signup';
 	const isSetupPage = nextUrl.pathname === '/setup';
 
 	// If trying to access /setup while not logged in
 	if (!isLoggedIn && isSetupPage) {
-		const loginUrl = new URL('/login', nextUrl.origin);
+		const loginUrl = new URL('/signin', nextUrl.origin);
 		return NextResponse.redirect(loginUrl);
 	}
 
