@@ -8,13 +8,10 @@ const { auth } = NextAuth(authConfig);
 const isUnprotectedRoute = createRouteMatcher(['/signin', '/signup']);
 
 export default auth((req) => {
-	console.log('ass');
 	const { nextUrl, auth: session } = req;
 	const isLoggedIn = !!session;
 
 	const isProtectedRoute = !isUnprotectedRoute(req);
-
-	console.log(isProtectedRoute);
 
 	// If trying to access /setup while not logged in
 	if (!isLoggedIn && isProtectedRoute) {

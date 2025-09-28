@@ -3,7 +3,9 @@
 		"biomejs.biome",
 		"dbaeumer.vscode-eslint",
 		"esbenp.prettier-vscode",
-		"dotenv.dotenv-vscode"
+		"mikestead.dotenv",
+		"mtxr.sqltools",
+		"mtxr.sqltools-driver-pg"
 	],
 	"unwantedRecommendations": ["dotenv.dotenv-vscode"]
 }

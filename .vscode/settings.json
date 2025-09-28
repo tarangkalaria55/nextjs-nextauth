@@ -59,7 +59,7 @@
 	"editor.allowVariableFontsInAccessibilityMode": true,
 
 	"files.associations": {
-		"env-sample": "dotenv",
+		"**/.env*": "dotenv",
 		"web.config": "xml",
 		"web.local.config": "xml",
 		"**/src/**/*.css": "tailwindcss"
@@ -87,5 +87,19 @@
 		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"WillLuke.nextjs.addTypesOnSave": true,
-	"WillLuke.nextjs.hasPrompted": true
+	"WillLuke.nextjs.hasPrompted": true,
+	"sqltools.connections": [
+		{
+			"ssh": "Disabled",
+			"previewLimit": 50,
+			"server": "localhost",
+			"port": 5432,
+			"driver": "PostgreSQL",
+			"name": "localhost",
+			"group": "local",
+			"database": "nextjs_nextauth_db",
+			"username": "tarang",
+			"password": "m00ns00n"
+		}
+	]
 }
