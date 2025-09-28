@@ -61,7 +61,8 @@
 	"files.associations": {
 		"env-sample": "dotenv",
 		"web.config": "xml",
-		"web.local.config": "xml"
+		"web.local.config": "xml",
+		"**/src/**/*.css": "tailwindcss"
 	},
 
 	"git.autofetchPeriod": 180,

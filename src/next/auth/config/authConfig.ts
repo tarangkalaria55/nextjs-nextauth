@@ -1,17 +1,18 @@
 import { NextAuthConfig } from 'next-auth';
-import { providers } from './providers/providers';
+import { env } from '@/lib/env';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
-import { env } from '@/lib/env';
+import { providers } from '../providers/providers';
 
-export const config = {
+export const authConfig = {
 	debug: process.env.NODE_ENV !== 'production',
-	adapter: PrismaAdapter(prisma),
 	providers: providers,
+	pages: {
+		signIn: '/signin',
+		newUser: '/profile',
+	},
+	adapter: PrismaAdapter(prisma),
 	secret: env.AUTH_SECRET,
-	// pages: {
-	// 	signIn: '/login',
-	// },
 	session: {
 		strategy: 'jwt',
 	},

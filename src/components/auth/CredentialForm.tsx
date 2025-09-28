@@ -12,41 +12,69 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { LoginResolver, LoginSchema } from '@/schema/login';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { FormError } from '@/components/auth/FormError';
 import { FormSuccess } from '@/components/auth/FormSuccess';
-import { login } from '@/actions/auth/login';
 import { Loader2 } from 'lucide-react';
+import { signIn } from 'next-auth/react';
+import { toast } from 'sonner';
 
-export const LoginForm = () => {
+import z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+export const credentialSchema = z.object({
+	email: z.email('This is not valid email address'),
+	password: z
+		.string()
+		.min(8, { message: 'Password must contain at least 8 characters' }),
+});
+
+export type CredentialSchema = z.infer<typeof credentialSchema>;
+export const CredentialResolver = zodResolver(credentialSchema);
+
+export const CredentialForm = () => {
 	const [error, setError] = useState<string | undefined>('');
 	const [success, setSuccess] = useState<string | undefined>('');
 	const [isPending, startTransition] = useTransition();
 	const router = useRouter();
 
-	const form = useForm<LoginSchema>({
+	const form = useForm<CredentialSchema>({
 		defaultValues: { email: '', password: '' },
-		resolver: LoginResolver,
+		resolver: CredentialResolver,
 	});
 
-	const onSubmit = (formData: LoginSchema) => {
-		startTransition(() => {
+	const onSubmit = (formData: CredentialSchema) => {
+		startTransition(async () => {
 			setError('');
 			setSuccess('');
-			login(formData)
-				.then((data) => {
-					if (data.success) {
-						setSuccess(data.success);
-						router.push('/setup');
-					} else if (data.error) {
-						setError(data.error);
-					}
-				})
-				.catch((data) => {
-					setError(data.error);
+
+			try {
+				const signInResult = await signIn('credentials', {
+					email: formData.email,
+					password: formData.password,
+					callbackUrl: '/',
 				});
+
+				// if (signInResult?.ok && !signInResult.error) {
+				// 	toast('Email delivered', {
+				// 		description: 'Check your inbox and spam',
+				// 		action: {
+				// 			label: 'Close',
+				// 			onClick: () => true,
+				// 		},
+				// 	});
+				// 	return;
+				// }
+
+				router.push('/setup');
+			} catch (error) {
+				if (error instanceof Error) {
+					setError(error.message);
+				} else {
+					setError('Opps! something went wrong');
+				}
+			}
 		});
 	};
 

@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
-export default function Home() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function Home(props: PageProps<'/'>) {
 	const { data: session } = useSession();
 
 	const handleSignin = async () => {
