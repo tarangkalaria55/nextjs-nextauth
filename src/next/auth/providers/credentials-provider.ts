@@ -1,7 +1,6 @@
 import Credentials from 'next-auth/providers/credentials';
 
 import type { Provider } from 'next-auth/providers';
-import { ProviderType } from './types';
 import { getUserByEmail } from '@/db/getUserByEmail';
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -17,7 +16,7 @@ export type CredentialSchema = z.infer<typeof credentialSchema>;
 export const CredentialResolver = zodResolver(credentialSchema);
 
 export const CredentialsProvider: Provider = Credentials({
-	name: ProviderType.Credentials,
+	name: 'credentials',
 	credentials: {
 		email: {
 			type: 'email',

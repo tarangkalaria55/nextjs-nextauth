@@ -8,8 +8,8 @@ export const authConfig = {
 	debug: process.env.NODE_ENV !== 'production',
 	providers: providers,
 	pages: {
-		signIn: '/signin',
-		newUser: '/profile',
+		signIn: '/auth/signin',
+		// newUser: '/profile',
 	},
 	adapter: PrismaAdapter(prisma),
 	secret: env.AUTH_SECRET,

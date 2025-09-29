@@ -13,12 +13,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { FormError } from '@/components/auth/FormError';
 import { FormSuccess } from '@/components/auth/FormSuccess';
 import { Loader2 } from 'lucide-react';
 import { signIn } from 'next-auth/react';
-import { toast } from 'sonner';
 
 import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +35,6 @@ export const CredentialForm = () => {
 	const [error, setError] = useState<string | undefined>('');
 	const [success, setSuccess] = useState<string | undefined>('');
 	const [isPending, startTransition] = useTransition();
-	const router = useRouter();
 
 	const form = useForm<CredentialSchema>({
 		defaultValues: { email: '', password: '' },
@@ -50,10 +47,10 @@ export const CredentialForm = () => {
 			setSuccess('');
 
 			try {
-				const signInResult = await signIn('credentials', {
+				await signIn('credentials', {
 					email: formData.email,
 					password: formData.password,
-					callbackUrl: '/',
+					redirectTo: '/profile',
 				});
 
 				// if (signInResult?.ok && !signInResult.error) {
@@ -67,7 +64,7 @@ export const CredentialForm = () => {
 				// 	return;
 				// }
 
-				router.push('/setup');
+				// router.push('/profile');
 			} catch (error) {
 				if (error instanceof Error) {
 					setError(error.message);

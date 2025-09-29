@@ -22,7 +22,7 @@ export const login = async (formData: LoginSchema) => {
 	try {
 		const result = await signIn('credentials', {
 			redirect: false,
-			callbackUrl: '/setup',
+			callbackUrl: '/profile',
 			email,
 			password,
 		});

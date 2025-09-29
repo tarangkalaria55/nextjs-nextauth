@@ -1,55 +1,76 @@
-// utils/routeMatcher.ts
-import { NextRequest } from 'next/server';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import type Link from 'next/link';
+import type { NextRequest } from 'next/server';
+
+import { pathToRegexp as pathToRegexpBase } from './path-to-regexp';
 
 /**
- * Creates a route matching function from an array of patterns.
- *
- * It supports standard RegExp syntax and simplifies the common Clerk-style
- * pattern of appending (.*) for all sub-paths.
- *
- * @param patterns An array of route patterns (strings).
- * e.g., ['/public', '/sign-in(.*)', '^/api/protected/']
- * @returns A function that takes a NextRequest and returns true if the
- * request URL's pathname matches any of the patterns.
+ * Enables autocompletion for a union type, while keeping the ability to use any string
+ * or type of `T`
+ * @internal
  */
-export function createRouteMatcher(patterns: string[]) {
-	const regexes: RegExp[] = patterns.map((pattern) => {
-		// 1. If the pattern is a simple string that does not start with a regex
-		//    anchor (like '^'), assume it's a prefix match and anchor it.
-		//    e.g., '/dashboard' becomes '^/dashboard$'
-		//    e.g., '/dashboard(.*)' is handled by the user-supplied regex.
-		if (
-			!pattern.startsWith('^') &&
-			!pattern.endsWith('$') &&
-			!pattern.includes('(')
-		) {
-			return new RegExp(`^${pattern}$`);
-		}
+type Autocomplete<U extends T, T = string> = U | (T & Record<never, never>);
 
-		// 2. Handle patterns that end with the Clerk-style wildcard `(.*)`
-		//    This is already a valid regex pattern, so we just wrap it to be safe.
-		//    e.g., '/dashboard(.*)' becomes new RegExp('/dashboard(.*)')
-		if (pattern.endsWith('(.*)')) {
-			// Ensure it starts with an anchor for security
-			const regexString = pattern.startsWith('/')
-				? `^${pattern}`
-				: `^/${pattern}`;
-			return new RegExp(regexString);
-		}
+const pathToRegexp = (path: string) => {
+	try {
+		return pathToRegexpBase(path);
+	} catch (e: any) {
+		throw new Error(
+			`Invalid path: ${path}.\nConsult the documentation of path-to-regexp here: https://github.com/pillarjs/path-to-regexp/tree/6.x\n${e.message}`
+		);
+	}
+};
 
-		// 3. For all other explicit regex or complex patterns, use them directly.
-		return new RegExp(pattern);
-	});
+type WithPathPatternWildcard<T = string> = `${T & string}(.*)`;
+type PathPattern = Autocomplete<WithPathPatternWildcard>;
+type PathMatcherParam = Array<RegExp | PathPattern> | RegExp | PathPattern;
 
-	return (req: NextRequest): boolean => {
-		// Get the pathname without any trailing slash (except for the root '/')
-		const pathname = req.nextUrl.pathname;
+const precomputePathRegex = (patterns: Array<string | RegExp>) => {
+	return patterns.map((pattern) =>
+		pattern instanceof RegExp ? pattern : pathToRegexp(pattern)
+	);
+};
 
-		// Next.js convention: Clerk's matcher typically uses the raw pathname.
-		// We normalize it slightly to avoid matching issues with trailing slashes.
-		const normalizedPathname =
-			pathname === '/' ? '/' : pathname.replace(/\/$/, '');
+/**
+ * Creates a function that matches paths against a set of patterns.
+ *
+ * @param patterns - A string, RegExp, or array of patterns to match against
+ * @returns A function that takes a pathname and returns true if it matches any of the patterns
+ */
+const createPathMatcher = (patterns: PathMatcherParam) => {
+	const routePatterns = [patterns || ''].flat().filter(Boolean);
+	const matchers = precomputePathRegex(routePatterns);
+	return (pathname: string) =>
+		matchers.some((matcher) => matcher.test(pathname));
+};
 
-		return regexes.some((regex) => regex.test(normalizedPathname));
-	};
-}
+type NextTypedRoute<T = Parameters<typeof Link>['0']['href']> = T extends string
+	? T
+	: never;
+type RouteMatcherWithNextTypedRoutes = Autocomplete<
+	WithPathPatternWildcard<NextTypedRoute> | NextTypedRoute
+>;
+
+export type RouteMatcherParam =
+	| Array<RegExp | RouteMatcherWithNextTypedRoutes>
+	| RegExp
+	| RouteMatcherWithNextTypedRoutes
+	| ((req: NextRequest) => boolean);
+
+/**
+ * Returns a function that accepts a `Request` object and returns whether the request matches the list of
+ * predefined routes that can be passed in as the first argument.
+ *
+ * You can use glob patterns to match multiple routes or a function to match against the request object.
+ * Path patterns and regular expressions are supported, for example: `['/foo', '/bar(.*)'] or `[/^\/foo\/.*$/]`
+ * For more information, see: https://clerk.com/docs
+ */
+export const createRouteMatcher = (routes: RouteMatcherParam) => {
+	if (typeof routes === 'function') {
+		return (req: NextRequest) => routes(req);
+	}
+
+	const matcher = createPathMatcher(routes);
+	return (req: NextRequest) => matcher(req.nextUrl.pathname);
+};

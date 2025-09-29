@@ -1,21 +1,23 @@
 import { NextResponse } from 'next/server';
-import NextAuth from 'next-auth';
-import { createRouteMatcher } from './lib/routeMatcher';
-import { authConfig } from './next/auth/config/authConfig';
+import { createRouteMatcher } from '@/lib/routeMatcher';
+import { auth } from '@/next/auth';
 
-const { auth } = NextAuth(authConfig);
-
-const isUnprotectedRoute = createRouteMatcher(['/signin', '/signup']);
+const isHomeRoute = createRouteMatcher(['/', '/dashboard']);
+const isPublicRoute = createRouteMatcher(['/auth(.*)']);
 
 export default auth((req) => {
 	const { nextUrl, auth: session } = req;
 	const isLoggedIn = !!session;
 
-	const isProtectedRoute = !isUnprotectedRoute(req);
+	const isProtectedRoute = !isPublicRoute(req);
 
-	// If trying to access /setup while not logged in
+	if (isHomeRoute(req)) {
+		return NextResponse.next();
+	}
+
+	// If trying to access /profile while not logged in
 	if (!isLoggedIn && isProtectedRoute) {
-		const loginUrl = new URL('/signin', nextUrl.origin);
+		const loginUrl = new URL('/auth/signin', nextUrl.origin);
 		return NextResponse.redirect(loginUrl);
 	}
 
