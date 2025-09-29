@@ -25,6 +25,14 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import GoogleIcon from '@/components/icons/GoogleIcon';
 import GithubIcon from '@/components/icons/GithubIcon';
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form';
 
 // --- Zod Schema Definitions ---
 
@@ -238,7 +246,7 @@ export default function SigninPage() {
 						<div className="flex justify-between items-center">
 							<Link
 								href="/forgot-password"
-								className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+								className="text-sm font-medium text-primary hover:text-primary/80 transition-colors underline hover:no-underline"
 							>
 								Forgot Password?
 							</Link>
@@ -307,6 +315,14 @@ export default function SigninPage() {
 							{isMagicSubmitting ? 'Sending...' : 'Sign In with Magic Link'}
 						</Button>
 					</form>
+
+					{/* Divider */}
+					<div className="relative">
+						<Separator />
+						<span className="absolute px-3 text-muted-foreground bg-background top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
+							or continue with
+						</span>
+					</div>
 
 					{/* OAuth Buttons */}
 					<div className="space-y-2">
