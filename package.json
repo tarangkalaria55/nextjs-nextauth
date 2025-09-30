@@ -18,7 +18,7 @@
 		"prisma:validate": "npx prisma validate",
 		"prisma:db:push": "npx prisma db push",
 		"prisma:db:pull": "npx prisma db pull",
-		"prisma:studio": "npx prisma studio"
+		"prisma:studio": "npx prisma studio --browser chrome"
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.10.0",
